@@ -23,12 +23,16 @@ class SaleManagement extends Component
 
     public function mount()
     {
-        $this->products = Product::all();
+        // $this->products = Product::all();
+        $this->resetDB();
     }
 
     public function calculateChange()
     {
-        $this->change = $this->cashGiven - $this->total;
+        if($this->cashGiven != null){
+            $this->change = $this->cashGiven - $this->total;
+        }
+       
     }
 
     public function applyDiscount()
@@ -60,6 +64,7 @@ class SaleManagement extends Component
     }
     public function addProduct($productId)
     {
+        $this->resetDB();
         $productsCollection = collect($this->products);
         $product = $productsCollection->firstWhere('id', $productId);
     
@@ -82,6 +87,7 @@ class SaleManagement extends Component
     
             $this->total += $product['price'];
             $this->net += $product['price'];
+           
         }
     }
 
@@ -131,6 +137,10 @@ class SaleManagement extends Component
         $this->total = 0;
         $this->discountAmount = 0;
         $this->net = 0;
+    }
+
+    public function resetDB(){
+        $this->products = Product::all();
     }
 
     public function render()
